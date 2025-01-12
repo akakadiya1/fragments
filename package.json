@@ -11,5 +11,8 @@
     "url": "git+https://github.com/akakadiya1/fragments.git"
   },
   "author": "Archi Kakadiya",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "3.4.2"
+  }
 }
