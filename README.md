@@ -106,13 +106,13 @@ To verify that the server is running and returning the correct headers and JSON 
       curl -i localhost:8080
       ```
     - Example output:
-    ```bash
-    HTTP/1.1 200 OK
-    Content-Type: application/json; charset=utf-8
-    Cache-Control: no-cache
-    Access-Control-Allow-Origin: *
-    ...
-    ```
+    - ```bash
+       HTTP/1.1 200 OK
+       Content-Type: application/json; charset=utf-8
+       Cache-Control: no-cache
+       Access-Control-Allow-Origin: *
+       ...
+       ```
 
 ## Troubleshooting
 
