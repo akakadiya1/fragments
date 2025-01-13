@@ -101,7 +101,7 @@ To verify that the server is running and returning the correct headers and JSON 
       "version": "0.0.1"
     }
     ```
-  - 3. To check the HTTP headers returned by the server, use:
+- 3. To check the HTTP headers returned by the server, use:
     - ```bash
       curl -i localhost:8080
       ```
