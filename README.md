@@ -80,7 +80,6 @@ npm run debug
 
 - **Purpose**: Launches the server with `nodemon` and enables remote debugging via the inspect protocol.
 - **Environment Variable**: `LOG_LEVEL=debug` is set using `cross-env`.
-- **Debugger Address**: Debugging is available at `0.0.0.0:9229`.
 
 ## NOTES
 
