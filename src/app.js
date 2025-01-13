@@ -21,7 +21,7 @@ const app = express();
 // Use pino logging middleware
 app.use(pino);
 
-// Use helmetjs security middleware
+// Use helmet-js security middleware
 app.use(helmet());
 
 // Use CORS middleware so we can make requests across origins
