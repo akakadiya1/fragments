@@ -80,7 +80,6 @@ npm run debug
 
 - **Purpose**: Launches the server with `nodemon` and enables remote debugging via the inspect protocol.
 - **Environment Variable**: `LOG_LEVEL=debug` is set using `cross-env`.
-- **Debugger Address**: Debugging is available at `0.0.0.0:9229`.
 
 ## NOTES
 
@@ -101,18 +100,18 @@ To verify that the server is running and returning the correct headers and JSON 
       "version": "0.0.1"
     }
     ```
-  - 3. To check the HTTP headers returned by the server, use:
+- 3. To check the HTTP headers returned by the server, use:
     - ```bash
       curl -i localhost:8080
       ```
     - Example output:
-    ```bash
-    HTTP/1.1 200 OK
-    Content-Type: application/json; charset=utf-8
-    Cache-Control: no-cache
-    Access-Control-Allow-Origin: *
-    ...
-    ```
+    - ```bash
+       HTTP/1.1 200 OK
+       Content-Type: application/json; charset=utf-8
+       Cache-Control: no-cache
+       Access-Control-Allow-Origin: *
+       ...
+       ```
 
 ## Troubleshooting
 
