@@ -4,9 +4,6 @@
 // NOTE: we only need to do this once, here in our app's main entry point.
 require('dotenv').config();
 
-// cause an ESLint error
-const unneededVariable = 'This variable is never used';
-
 // We want to log any crash cases so we can debug later from logs.
 const logger = require('./logger');
 
