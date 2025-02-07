@@ -34,10 +34,6 @@ app.use(compression());
 passport.use(authenticate.strategy());
 app.use(passport.initialize());
 
-// modifications to src/app.js
-
-// Remove `app.get('/', (req, res) => {...});` and replace with:
-
 // Define our routes
 app.use('/', require('./routes'));
 
