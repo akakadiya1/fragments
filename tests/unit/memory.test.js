@@ -5,7 +5,7 @@ const {
   readFragmentData,
   listFragments,
   deleteFragment,
-} = require('../../src/model/data/memory');
+} = require('../../src/model/data'); // importing from index.js[data] for future scalability [AWS]
 
 describe('Memory Fragment Database', () => {
   const ownerId = 'user123';
