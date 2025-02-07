@@ -1,6 +1,6 @@
 # fragments
 
-A repository for cloud computing course labs and projects, showcasing concepts like cloud deployment, microservices, and distributed systems using tools like Docker, Kubernetes, and AWS.
+A repository for building a scalable microservice to manage small fragments of text and image data in various formats (e.g., plain text, Markdown, PNG, JPEG). This project involves implementing a REST API for CRUD operations, enabling data format conversions and ensuring secure access and authentication. The service is designed to integrate seamlessly with existing systems and be deployed to AWS using CI/CD pipelines. Key technologies include RESTful APIs, Docker and AWS for cloud deployment, with a focus on scalability and efficient data storage.
 
 ## Getting Started
 
