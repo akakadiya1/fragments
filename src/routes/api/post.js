@@ -4,8 +4,10 @@ const logger = require('../../logger');
 module.exports = async (req, res) => {
   logger.debug('Received POST /fragments request', { headers: req.headers });
   try {
-    // Ensure Content-Type is present
+    // Extract the Content-Type header from the request
     const contentType = req.get('Content-Type');
+
+    // If Content-Type is missing, return a 415 (Unsupported Media Type) response
     if (!contentType) {
       logger.warn('Missing Content-Type header');
       return res.status(415).json({ status: 'error', message: 'Unsupported Media Type' });
@@ -13,13 +15,13 @@ module.exports = async (req, res) => {
 
     logger.debug(`Content-Type received: ${contentType}`);
 
-    // Validate Content-Type
+    // Check if the provided Content-Type is valid
     if (!Fragment.isSupportedType(contentType)) {
       logger.warn(`Unsupported content type: ${contentType}`);
       return res.status(415).json({ status: 'error', message: 'Unsupported Media Type' });
     }
 
-    // Ensure request body is a Buffer and not JSON-like
+    // Ensure the request body is a Buffer (raw binary data) and not JSON-like
     if (!Buffer.isBuffer(req.body)) {
       logger.warn('Request body is not a Buffer');
       return res
@@ -36,29 +38,34 @@ module.exports = async (req, res) => {
         .json({ status: 'error', message: 'Bad Request: Body must be raw binary data' });
       // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      // If parsing fails, it means the buffer is valid binary, so we proceed
+      // Parsing failed, which means the data is valid raw binary
     }
-    // Use a default user ID if `req.user` is missing (fix for test environment)
+
+    // Use the authenticated user ID or a default 'test-user' for testing environments
     const ownerId = req.user || 'test-user';
 
-    // Create a new Fragment
+    // Create a new Fragment instance with metadata
     const fragment = new Fragment({
       ownerId,
       type: contentType,
       size: req.body.length,
     });
 
-    // Save metadata and data
+    // Save the fragment's metadata to the database
     await fragment.save();
+
+    // Save the actual binary data associated with the fragment
     await fragment.setData(req.body);
 
     logger.info(`Created new fragment: ${fragment.id}`);
 
-    // Set the API URL: Use `API_URL` from .env, or construct from `req.headers.host`
+    // Determine the base API URL (use `API_URL` from environment variables or default to localhost)
     let apiUrl = process.env.API_URL || `http://localhost:8080`;
 
+    // Construct the full resource location for the created fragment
     const location = `${apiUrl}/v1/fragments/${fragment.id}`;
 
+    // Respond with a 201 (Created) status, setting the Location header with the fragment's URL
     return res
       .status(201)
       .set('Location', location)
@@ -74,6 +81,7 @@ module.exports = async (req, res) => {
         },
       });
   } catch (error) {
+    // Log and return an error if an exception occurs
     logger.error(`Error creating fragment: ${error.message}`);
     return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
