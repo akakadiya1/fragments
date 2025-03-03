@@ -2,7 +2,11 @@ const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 
 module.exports = async (req, res) => {
-  logger.debug('Received POST /fragments request', { headers: req.headers });
+  // Updated after Assignment 1 feedback:
+  // Remove Authorization header before logging to prevent exposing sensitive data
+  const safeHeaders = { ...req.headers };
+  delete safeHeaders.authorization;
+  logger.debug('Received POST /fragments request', { headers: safeHeaders });
   try {
     // Extract the Content-Type header from the request
     const contentType = req.get('Content-Type');
