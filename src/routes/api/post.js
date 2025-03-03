@@ -25,26 +25,6 @@ module.exports = async (req, res) => {
       return res.status(415).json({ status: 'error', message: 'Unsupported Media Type' });
     }
 
-    // Ensure the request body is a Buffer (raw binary data) and not JSON-like
-    if (!Buffer.isBuffer(req.body)) {
-      logger.warn('Request body is not a Buffer');
-      return res
-        .status(415)
-        .json({ status: 'error', message: 'Bad Request: Body must be raw binary data' });
-    }
-
-    // Check if the buffer contains JSON instead of raw binary data
-    try {
-      JSON.parse(req.body.toString()); // If parsing succeeds, it's not valid raw binary
-      logger.warn('Request body contains JSON instead of raw binary data');
-      return res
-        .status(415)
-        .json({ status: 'error', message: 'Bad Request: Body must be raw binary data' });
-      // eslint-disable-next-line no-unused-vars
-    } catch (error) {
-      // Parsing failed, which means the data is valid raw binary
-    }
-
     // Use the authenticated user ID or a default 'test-user' for testing environments
     const ownerId = req.user || 'test-user';
 

@@ -63,25 +63,6 @@ describe('POST /v1/fragments', () => {
     expect(res.body.message).toBe('Unsupported Media Type');
   });
 
-  test('returns 415 if request body is not raw binary data', async () => {
-    const invalidBodies = [
-      { input: '{"key": "value"}', desc: 'JSON string' },
-      { input: JSON.stringify({ key: 'value' }), desc: 'Actual JSON' },
-    ];
-
-    for (const { input, desc } of invalidBodies) {
-      console.log(`Testing with: ${desc}`);
-      const res = await request(app)
-        .post('/v1/fragments')
-        .auth('user1@email.com', 'password1')
-        .set('Content-Type', 'text/plain')
-        .send(input);
-
-      expect(res.statusCode).toBe(415);
-      expect(res.body.message).toBe('Bad Request: Body must be raw binary data');
-    }
-  });
-
   test('handles unexpected server errors gracefully', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => {}); // Suppress error logs in test output
     jest
