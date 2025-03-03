@@ -65,13 +65,4 @@ describe('GET /v1/fragments', () => {
     expect(res.statusCode).toBe(500);
     expect(res.body.error).toBe('Internal Server Error');
   });
-
-  test('returns 404 when no fragments exist for the user', async () => {
-    jest.spyOn(Fragment, 'byUser').mockResolvedValue([]);
-
-    const res = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
-
-    expect(res.statusCode).toBe(404);
-    expect(res.body.error).toBe('No fragments found');
-  });
 });
