@@ -18,6 +18,11 @@ module.exports = async (req, res) => {
     const expand = req.query.expand === '1'; // Check if expand query param is set
     const fragments = await Fragment.byUser(ownerId, expand);
 
+    if (!fragments || fragments.length === 0) {
+      logger.info(`No fragments found for user ${ownerId}`);
+      return res.status(404).json({ error: 'No fragments found' });
+    }
+
     logger.info(`Retrieved all fragments for user ${ownerId}`);
     return res.status(200).json(createSuccessResponse({ fragments }));
   } catch (err) {
