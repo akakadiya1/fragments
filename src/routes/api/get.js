@@ -15,6 +15,8 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    // Assignment 2 requirement:
+    // GET /fragments?expand=1 now returns expanded fragment metadata for an authenticated user. See 4.4.1.
     const expand = req.query.expand === '1'; // Check if expand query param is set
     const fragments = await Fragment.byUser(ownerId, expand);
 
