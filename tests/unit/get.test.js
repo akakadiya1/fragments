@@ -62,7 +62,7 @@ describe('GET /v1/fragments', () => {
 
     const res = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
 
-    expect(res.statusCode).toBe(404);
-    expect(res.body.error).toBe('Database error');
+    expect(res.statusCode).toBe(500);
+    expect(res.body.error).toBe('Internal Server Error');
   });
 });
