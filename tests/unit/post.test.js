@@ -19,6 +19,54 @@ describe('POST /v1/fragments', () => {
     expect(res.headers['location']).toMatch(/\/v1\/fragments\/[a-f0-9-]+$/);
   });
 
+  test('authenticated users can create a JSON fragment', async () => {
+    const data = JSON.stringify({ key: 'value' });
+
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'application/json')
+      .send(data);
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.fragment.type).toBe('application/json');
+  });
+
+  test('authenticated users can create a fragment with charset in Content-Type', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain; charset=utf-8')
+      .send('This is a fragment');
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.fragment.type).toBe('text/plain; charset=utf-8');
+  });
+
+  test('authenticated users can create a fragment with a large request body', async () => {
+    const largeData = Buffer.alloc(1024 * 1024, 'a'); // 1 MB of data
+
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send(largeData);
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.fragment.size).toBe(largeData.length);
+  });
+
+  test('returns 400 when request body is empty', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('');
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe('Fragment content cannot be empty');
+  });
+
   test('post returns fragment with all necessary properties', async () => {
     const data = 'This is a fragment';
     const size = Buffer.byteLength(data);

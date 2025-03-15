@@ -25,6 +25,12 @@ module.exports = async (req, res) => {
       return res.status(415).json({ status: 'error', message: 'Unsupported Media Type' });
     }
 
+    // Check if the request body is empty
+    if (!req.body || req.body.length === 0) {
+      logger.warn('Empty request body');
+      return res.status(400).json({ status: 'error', message: 'Fragment content cannot be empty' });
+    }
+
     // Use the authenticated user ID or a default 'test-user' for testing environments
     const ownerId = req.user || 'test-user';
 
@@ -41,7 +47,7 @@ module.exports = async (req, res) => {
     // Save the actual binary data associated with the fragment
     await fragment.setData(req.body);
 
-    logger.info(`Created new fragment: ${fragment.id}`);
+    logger.info(`Created new fragment for user ${ownerId}: ${fragment.id}`);
 
     // Determine the base API URL (use `API_URL` from environment variables or default to localhost)
     let apiUrl = process.env.API_URL || `http://localhost:8080`;

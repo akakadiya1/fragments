@@ -142,7 +142,15 @@ class Fragment {
    */
   static isSupportedType(value) {
     // Expand when adding new types
-    const supportedTypes = ['text/plain'];
+    const supportedTypes = [
+      'text/plain',
+      'text/plain; charset=utf-8',
+      'text/markdown',
+      'text/html',
+      'text/csv',
+      'application/json',
+      'application/yaml',
+    ];
     return supportedTypes.includes(contentType.parse(value).type);
   }
 }
