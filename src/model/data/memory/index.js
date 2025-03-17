@@ -8,6 +8,7 @@ const metadata = new MemoryDB();
 function writeFragment(fragment) {
   // Simulate db/network serialization of the value, storing only JSON representation.
   // This is important because it's how things will work later with AWS data stores.
+  console.log('Writing fragment:', fragment);
   const serialized = JSON.stringify(fragment);
   return metadata.put(fragment.ownerId, fragment.id, serialized);
 }

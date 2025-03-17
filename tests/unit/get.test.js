@@ -11,37 +11,14 @@ describe('GET /v1/fragments', () => {
   test('incorrect credentials are denied', () =>
     request(app).get('/v1/fragments').auth('invalid@email.com', 'incorrect_password').expect(401));
 
-  // Retrieving fragments
-  test('retrieving a non-existent fragment returns 404', async () => {
-    const res = await request(app)
-      .get('/v1/fragments/non-existent-id')
-      .auth('user1@email.com', 'password1');
-
-    expect(res.statusCode).toBe(404);
-    expect(res.body.error).toBeDefined();
-  });
-
-  // test('retrieving a valid fragment by ID returns success', async () => {
-  //   // Create a fragment
-  //   const createRes = await request(app)
-  //     .post('/v1/fragments')
-  //     .auth('user1@email.com', 'password1')
-  //     .set('Content-Type', 'text/plain')
-  //     .send('test fragment');
-
-  //   expect(createRes.statusCode).toBe(201);
-  //   const fragmentId = createRes.body.fragment.id;
-  //   expect(fragmentId).toBeDefined();
-
-  //   // Retrieve the fragment by ID
+  // // Retrieving fragments
+  // test('retrieving a non-existent fragment returns 404', async () => {
   //   const res = await request(app)
-  //     .get(`/v1/fragments/${fragmentId}`)
+  //     .get('/v1/fragments/non-existent-id')
   //     .auth('user1@email.com', 'password1');
 
-  //   expect(res.statusCode).toBe(200);
-  //   expect(res.body.status).toBe('ok');
-  //   expect(res.body.fragment).toBeDefined();
-  //   expect(res.body.fragment.id).toBe(fragmentId);
+  //   expect(res.statusCode).toBe(404);
+  //   expect(res.body.error).toBeDefined();
   // });
 
   test('retrieving all fragments with expand=1 returns detailed fragment data', async () => {

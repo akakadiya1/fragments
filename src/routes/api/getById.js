@@ -1,48 +1,44 @@
-// const { createSuccessResponse } = require('../../../src/response');
+// src/routes/api/getById.js
+const { createSuccessResponse } = require('../../../src/response');
 const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
-const { convertFragment } = require('../../utils/conversionService');
 
-/**
- * Get a specific fragment by ID
- */
 module.exports = async (req, res) => {
   try {
-    const ownerId = req.user;
+    const ownerId = req.user; // Authenticated user ID
     if (!ownerId) {
       logger.warn('Unauthorized request: No user found');
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const { id } = req.params;
-    const extension = req.path.split('.').pop();
 
+    // Fetch the fragment by ID
     const fragment = await Fragment.byId(ownerId, id);
     if (!fragment) {
       return res.status(404).json({ error: 'Fragment not found' });
     }
 
-    let data = fragment.data;
-    let contentType = fragment.mimeType;
+    // Fetch the fragment data
+    const data = await fragment.getData();
 
-    // Handle conversions if an extension is provided
-    if (extension !== id) {
-      const converted = await convertFragment(fragment, extension);
-      if (!converted) {
-        return res.status(415).json({ error: 'Unsupported conversion type' });
-      }
-      data = converted.data;
-      contentType = converted.mimeType;
-    }
-
-    // Send raw data with correct Content-Type
-    res.setHeader('Content-Type', contentType);
-    res.status(200).send(data);
-
-    // logger.info(`Retrieved fragment ${id} for user ${ownerId}`);
-    // return res.status(200).json(createSuccessResponse({ fragment }));
+    // Return the fragment metadata and data
+    logger.info(`Retrieved fragment ${id} for user ${ownerId}`);
+    return res.status(200).json(
+      createSuccessResponse({
+        fragment: {
+          id: fragment.id,
+          ownerId: fragment.ownerId,
+          created: fragment.created,
+          updated: fragment.updated,
+          type: fragment.type,
+          size: fragment.size,
+          data: data.toString(), // Include the fragment data
+        },
+      })
+    );
   } catch (err) {
     logger.error(`Error retrieving fragment: ${err.message}`);
-    return res.status(404).json({ error: err.message });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };

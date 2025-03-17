@@ -59,6 +59,7 @@ class Fragment {
    */
   static async byId(ownerId, id) {
     // TIP: make sure you properly re-create a full Fragment instance after getting from db.
+    console.log(`Fetching fragment with ID: ${id} for user: ${ownerId}`);
     const fragment = await readFragment(ownerId, id);
     if (!fragment) {
       throw new Error('Fragment not found');
@@ -82,6 +83,7 @@ class Fragment {
    */
   async save() {
     this.updated = new Date().toISOString();
+    console.log('Saving fragment:', this);
     await writeFragment(this);
   }
 

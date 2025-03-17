@@ -1,21 +1,26 @@
+// src/utils/conversionService.js
 const yaml = require('js-yaml');
 
 const conversionMap = {
   'text/plain': {
-    json: (data) => JSON.stringify({ content: data }), // Convert plain text to JSON
     txt: (data) => data, // No conversion needed
+    json: (data) => JSON.stringify({ content: data }), // Convert to JSON
   },
   'text/markdown': {
-    html: (data) => `<h1>${data.replace('# ', '')}</h1>`, // Convert markdown to HTML
-    txt: (data) => data, // No conversion needed
+    md: (data) => data, // No conversion needed
+    html: (data) => `<h1>${data.replace('# ', '')}</h1>`, // Convert to HTML
+    txt: (data) => data, // Convert to plain text
   },
   'text/html': {
-    txt: (data) => data.replace(/<[^>]+>/g, ''), // Strip HTML tags to convert to plain text
+    html: (data) => data, // No conversion needed
+    txt: (data) => data.replace(/<[^>]+>/g, ''), // Strip HTML tags
   },
   'application/json': {
-    yaml: (data) => yaml.dump(JSON.parse(data)), // Convert JSON to YAML
-    txt: (data) => JSON.stringify(JSON.parse(data), null, 2), // Pretty-print JSON as text
+    json: (data) => data, // No conversion needed
+    yaml: (data) => yaml.dump(JSON.parse(data)), // Convert to YAML
+    txt: (data) => JSON.stringify(JSON.parse(data), null, 2), // Pretty-print JSON
   },
+  // Add more types and conversions as needed
 };
 
 async function convertFragment(fragment, extension) {
@@ -24,7 +29,7 @@ async function convertFragment(fragment, extension) {
 
   try {
     const convertedData = converter(fragment.data.toString()); // Ensure data is a string
-    const mimeType = getMimeTypeForExtension(extension); // Get the correct MIME type for the extension
+    const mimeType = getMimeTypeForExtension(extension); // Get the correct MIME type
 
     return {
       mimeType,
@@ -38,14 +43,16 @@ async function convertFragment(fragment, extension) {
 
 function getMimeTypeForExtension(extension) {
   switch (extension) {
-    case 'json':
-      return 'application/json';
-    case 'yaml':
-      return 'application/yaml';
-    case 'html':
-      return 'text/html';
     case 'txt':
       return 'text/plain';
+    case 'json':
+      return 'application/json';
+    case 'html':
+      return 'text/html';
+    case 'yaml':
+      return 'application/yaml';
+    case 'md':
+      return 'text/markdown';
     default:
       throw new Error(`Unsupported extension: ${extension}`);
   }
