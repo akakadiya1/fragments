@@ -16,13 +16,13 @@ describe('GET /v1/fragments/:id', () => {
       .auth('invalid@email.com', 'incorrect_password')
       .expect(401));
 
-  // // Retrieving fragments
-  // test('retrieving a non-existent fragment returns 404', async () => {
-  //   const res = await request(app).get('/v1/fragments/non-existent-id').auth(ownerId, 'password1');
+  // Retrieving fragments
+  test('retrieving a non-existent fragment returns 404', async () => {
+    const res = await request(app).get('/v1/fragments/non-existent-id').auth(ownerId, 'password1');
 
-  //   expect(res.statusCode).toBe(404);
-  //   expect(res.body.error).toBe('Fragment not found');
-  // });
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toBe('Fragment not found');
+  });
 
   // test('retrieving an existing fragment returns the fragment metadata', async () => {
   //   // Create a fragment

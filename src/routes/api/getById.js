@@ -29,6 +29,13 @@ module.exports = async (req, res) => {
     return res.status(200).send(data);
   } catch (err) {
     logger.error(`Error retrieving fragment: ${err.message}`);
+
+    // Handle "not found" errors specifically
+    if (err.message.includes('not found') || err.message.includes('does not exist')) {
+      return res.status(404).json({ error: 'Fragment not found' });
+    }
+
+    // Handle all other errors as 500
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };

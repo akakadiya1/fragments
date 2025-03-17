@@ -11,15 +11,15 @@ describe('GET /v1/fragments', () => {
   test('incorrect credentials are denied', () =>
     request(app).get('/v1/fragments').auth('invalid@email.com', 'incorrect_password').expect(401));
 
-  // // Retrieving fragments
-  // test('retrieving a non-existent fragment returns 404', async () => {
-  //   const res = await request(app)
-  //     .get('/v1/fragments/non-existent-id')
-  //     .auth('user1@email.com', 'password1');
+  // Retrieving fragments
+  test('retrieving a non-existent fragment returns 404', async () => {
+    const res = await request(app)
+      .get('/v1/fragments/non-existent-id')
+      .auth('user1@email.com', 'password1');
 
-  //   expect(res.statusCode).toBe(404);
-  //   expect(res.body.error).toBeDefined();
-  // });
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toBeDefined();
+  });
 
   test('retrieving all fragments with expand=1 returns detailed fragment data', async () => {
     const res = await request(app)
