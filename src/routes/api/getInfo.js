@@ -1,3 +1,4 @@
+const { createSuccessResponse } = require('../../../src/response');
 const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 
@@ -17,18 +18,22 @@ module.exports = async (req, res) => {
       return res.status(404).json({ error: 'Fragment not found' });
     }
 
-    // Fetch the fragment data
-    const data = await fragment.getData();
-
-    // Set the Content-Type and Content-Length headers
-    res.setHeader('Content-Type', fragment.type);
-    res.setHeader('Content-Length', data.length);
-
-    // Return the fragment data
-    logger.info(`Retrieved fragment ${id} for user ${ownerId}`);
-    return res.status(200).send(data);
+    // Return the fragment metadata
+    logger.info(`Retrieved fragment info ${id} for user ${ownerId}`);
+    return res.status(200).json(
+      createSuccessResponse({
+        fragment: {
+          id: fragment.id,
+          ownerId: fragment.ownerId,
+          created: fragment.created,
+          updated: fragment.updated,
+          type: fragment.type,
+          size: fragment.size,
+        },
+      })
+    );
   } catch (err) {
-    logger.error(`Error retrieving fragment: ${err.message}`);
+    logger.error(`Error retrieving fragment info: ${err.message}`);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
