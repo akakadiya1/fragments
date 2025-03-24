@@ -1,0 +1,38 @@
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "ownerId",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "fragments",
+        "KeySchema": [
+            {
+                "AttributeName": "ownerId",
+                "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "id",
+                "KeyType": "RANGE"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2025-03-24T13:31:06.696000-04:00",
+        "ProvisionedThroughput": {
+            "LastIncreaseDateTime": "1969-12-31T19:00:00-05:00",
+            "LastDecreaseDateTime": "1969-12-31T19:00:00-05:00",
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 10,
+            "WriteCapacityUnits": 5
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:ddblocal:000000000000:table/fragments",
+        "DeletionProtectionEnabled": false
+    }
+}
