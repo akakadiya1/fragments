@@ -5,6 +5,7 @@ const { createSuccessResponse } = require('../../src/response');
 
 // version and author from package.json
 const { version, author } = require('../../package.json');
+const { hostname } = require('os');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
@@ -23,6 +24,8 @@ const data = {
   author,
   githubUrl: 'https://github.com/akakadiya1/fragments',
   version,
+  // Include the hostname in the response
+  hostname: hostname(),
 };
 
 /**
