@@ -73,7 +73,12 @@ class Fragment {
    * @returns Promise<void>
    */
   static async delete(ownerId, id) {
-    await deleteFragment(ownerId, id);
+    try {
+      // Call the deleteFragment function to delete both metadata and data
+      await deleteFragment(ownerId, id);
+    } catch (err) {
+      throw new Error(`Error during fragment deletion: ${err.message}`);
+    }
   }
 
   /**
