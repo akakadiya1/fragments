@@ -27,6 +27,12 @@ services:
       # something else is defined in the env.
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-fragments}
       - AWS_DYNAMODB_TABLE_NAME=${AWS_DYNAMODB_TABLE_NAME:-fragments}
+      # Add these AWS credentials (for LocalStack development)
+      - AWS_ACCESS_KEY_ID=test # LocalStack accepts any value for dev
+      - AWS_SECRET_ACCESS_KEY=test # LocalStack accepts any value for dev
+      # For production AWS, use these instead (or set them via environment variables):
+      # - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      # - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     # Ports to publish
     ports:
       - '8080:8080'

@@ -36,6 +36,10 @@
         {
           "name": "AWS_COGNITO_CLIENT_ID",
           "value": "${AWS_COGNITO_CLIENT_ID}"
+        },
+        {
+          "name": "AWS_S3_BUCKET_NAME",
+          "value": "akakadiya1-fragments"
         }
       ],
       "environmentFiles": [],
