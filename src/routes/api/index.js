@@ -1,7 +1,5 @@
 // src/routes/api/index.js
 
-// we'll add more here as we expand our implementation in future labs
-
 /**
  * The main entry-point for the v1 version of the fragments API.
  */
@@ -35,8 +33,7 @@ router.get('/fragments', require('./get'));
 // Use a raw body parser for POST, which will give a `Buffer` Object or `{}` at `req.body`
 // You can use Buffer.isBuffer(req.body) to test if it was parsed by the raw body parser.
 router.post('/fragments', rawBody(), require('./post'));
+router.put('/fragments/:id', rawBody(), require('./putById'));
 router.delete('/fragments/:id', require('./delete'));
-
-// Other routes (PUT) will go here later on...
 
 module.exports = router;
