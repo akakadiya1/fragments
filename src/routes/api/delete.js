@@ -21,7 +21,9 @@ module.exports = async (req, res) => {
     await Fragment.delete(ownerId, id);
 
     logger.info(`Deleted fragment ${id} for user ${ownerId}`);
-    return res.status(204).send(); // 204 No Content (successful delete)
+    return res.status(204).json({
+      status: 'ok',
+    }); // 204 No Content (successful delete)
   } catch (err) {
     logger.error(`Error deleting fragment: ${err.message}`);
 
