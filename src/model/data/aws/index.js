@@ -87,6 +87,22 @@ async function listFragments(ownerId, expand = false) {
   }
 }
 
+// Updates both metadata and data for a fragment
+async function updateFragment(ownerId, id, updatedFragment, dataBuffer) {
+  try {
+    // First update the metadata (make sure updatedFragment includes updated timestamp)
+    await writeFragment(updatedFragment);
+
+    // Then update the data in S3
+    await writeFragmentData(ownerId, id, dataBuffer);
+
+    logger.info(`Successfully updated fragment ${id} for owner ${ownerId}`);
+  } catch (err) {
+    logger.error({ err, ownerId, id }, 'Failed to update fragment');
+    throw err;
+  }
+}
+
 // Deletes a fragment's metadata from DynamoDB and its data from S3. Returns a Promise.
 async function deleteFragment(ownerId, id) {
   // Configure our DELETE params, with the name of the table and key (partition key + sort key)
@@ -202,5 +218,6 @@ module.exports.writeFragment = writeFragment;
 module.exports.readFragment = readFragment;
 module.exports.writeFragmentData = writeFragmentData;
 module.exports.readFragmentData = readFragmentData;
+module.exports.updateFragment = updateFragment;
 module.exports.deleteFragmentData = deleteFragmentData;
 module.exports.deleteFragment = deleteFragment;

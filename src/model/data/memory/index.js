@@ -45,6 +45,36 @@ async function listFragments(ownerId, expand = false) {
   return parsedFragments.map((fragment) => fragment.id);
 }
 
+// Update a fragment's data and metadata
+async function updateFragment(ownerId, id, contentType, newDataBuffer) {
+  const existingFragment = await readFragment(ownerId, id);
+
+  if (!existingFragment) {
+    const error = new Error(`Fragment with id ${id} not found`);
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Check if content-type matches
+  if (existingFragment.type !== contentType) {
+    const error = new Error(
+      `Content-Type mismatch: expected ${existingFragment.type}, got ${contentType}`
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Update size and updated timestamp
+  existingFragment.updated = new Date().toISOString();
+  existingFragment.size = Buffer.byteLength(newDataBuffer);
+
+  // Write updated data and metadata
+  await writeFragmentData(ownerId, id, newDataBuffer);
+  await writeFragment(existingFragment);
+
+  return existingFragment;
+}
+
 // Delete a fragment's metadata and data from memory db. Returns a Promise
 function deleteFragment(ownerId, id) {
   return Promise.all([
@@ -60,4 +90,5 @@ module.exports.writeFragment = writeFragment;
 module.exports.readFragment = readFragment;
 module.exports.writeFragmentData = writeFragmentData;
 module.exports.readFragmentData = readFragmentData;
+module.exports.updateFragment = updateFragment;
 module.exports.deleteFragment = deleteFragment;
