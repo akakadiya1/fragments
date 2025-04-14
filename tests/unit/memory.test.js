@@ -5,6 +5,7 @@ const {
   readFragmentData,
   listFragments,
   deleteFragment,
+  updateFragment,
 } = require('../../src/model/data'); // importing from index.js[data] for future scalability [AWS]
 
 describe('Memory Fragment Database', () => {
@@ -58,5 +59,67 @@ describe('Memory Fragment Database', () => {
     expect(await readFragment(ownerId, fragmentId)).toBeUndefined();
     expect(await readFragmentData(ownerId, fragmentId)).toBeUndefined();
     await expect(deleteFragment(ownerId, fragmentId)).rejects.toThrow();
+  });
+});
+
+describe('updateFragment()', () => {
+  const ownerId = 'user123';
+  const fragmentId = 'frag1';
+  const initialFragment = {
+    ownerId,
+    id: fragmentId,
+    type: 'text/plain',
+    size: 11,
+    created: new Date().toISOString(),
+    updated: new Date().toISOString(),
+  };
+  const initialBuffer = Buffer.from('Hello World');
+  const newBuffer = Buffer.from('Updated content');
+
+  beforeEach(async () => {
+    await writeFragment(initialFragment);
+    await writeFragmentData(ownerId, fragmentId, initialBuffer);
+  });
+
+  afterEach(async () => {
+    await deleteFragment(ownerId, fragmentId);
+  });
+
+  test('updates fragment data and metadata correctly', async () => {
+    const updatedFragment = await updateFragment(ownerId, fragmentId, 'text/plain', newBuffer);
+
+    // Check metadata was updated
+    expect(updatedFragment.size).toBe(newBuffer.length);
+    expect(new Date(updatedFragment.updated).getTime()).toBeGreaterThanOrEqual(
+      new Date(initialFragment.updated).getTime()
+    );
+
+    // Check data was updated
+    const data = await readFragmentData(ownerId, fragmentId);
+    expect(data).toEqual(newBuffer);
+  });
+
+  test('throws 404 error for non-existent fragment', async () => {
+    await expect(updateFragment(ownerId, 'non-existent', 'text/plain', newBuffer)).rejects.toThrow(
+      /Fragment with id non-existent not found/
+    );
+  });
+
+  test('throws 400 error for content-type mismatch', async () => {
+    await expect(updateFragment(ownerId, fragmentId, 'text/markdown', newBuffer)).rejects.toThrow(
+      /Content-Type mismatch/
+    );
+  });
+
+  test('throws error when new data buffer is not provided', async () => {
+    await expect(updateFragment(ownerId, fragmentId, 'text/plain', undefined)).rejects.toThrow();
+  });
+
+  test('maintains other fragment properties after update', async () => {
+    const updatedFragment = await updateFragment(ownerId, fragmentId, 'text/plain', newBuffer);
+    expect(updatedFragment.ownerId).toBe(initialFragment.ownerId);
+    expect(updatedFragment.id).toBe(initialFragment.id);
+    expect(updatedFragment.type).toBe(initialFragment.type);
+    expect(updatedFragment.created).toBe(initialFragment.created);
   });
 });
