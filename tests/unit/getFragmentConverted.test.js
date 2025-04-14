@@ -33,7 +33,8 @@ describe('GET /v1/fragments/:id/:ext', () => {
       id: 'existing-id',
       ownerId: 'user1@email.com',
       type: 'text/plain',
-      getData: jest.fn().mockResolvedValue('This is a plain text fragment.'),
+      formats: ['text/plain'], // Doesn't include HTML
+      getConvertedInto: jest.fn(), // Still define it to avoid runtime error
     };
 
     jest.spyOn(Fragment, 'byId').mockResolvedValue(mockFragment);
@@ -43,7 +44,7 @@ describe('GET /v1/fragments/:id/:ext', () => {
       .auth('user1@email.com', 'password1');
 
     expect(res.statusCode).toBe(415);
-    expect(res.body).toHaveProperty('error', 'Unsupported fragment type for conversion'); // Updated key
+    expect(res.body).toHaveProperty('error', 'Unsupported conversion');
   });
 
   test('requesting an unsupported conversion type returns 415', async () => {
@@ -72,7 +73,8 @@ describe('GET /v1/fragments/:id/:ext', () => {
       id: 'existing-id',
       ownerId: 'user1@email.com',
       type: 'text/markdown',
-      getData: jest.fn().mockResolvedValue(markdownContent),
+      formats: ['text/markdown', 'text/html'], // Allow conversion to HTML
+      getConvertedInto: jest.fn().mockResolvedValue(htmlContent),
     };
 
     jest.spyOn(Fragment, 'byId').mockResolvedValue(mockFragment);
@@ -83,7 +85,7 @@ describe('GET /v1/fragments/:id/:ext', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.text.trim()).toBe(htmlContent.trim());
-    expect(res.headers['content-type']).toContain('text/html'); // Allow for charset=utf-8
+    expect(res.headers['content-type']).toContain('text/html');
   });
 
   test('handles internal errors gracefully', async () => {
