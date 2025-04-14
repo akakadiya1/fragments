@@ -56,20 +56,10 @@ module.exports = async (req, res) => {
     const location = `${apiUrl}/v1/fragments/${fragment.id}`;
 
     // Respond with a 201 (Created) status, setting the Location header with the fragment's URL
-    return res
-      .status(201)
-      .set('Location', location)
-      .json({
-        status: 'ok',
-        fragment: {
-          id: fragment.id,
-          ownerId: fragment.ownerId,
-          created: fragment.created,
-          updated: fragment.updated,
-          type: fragment.type,
-          size: fragment.size,
-        },
-      });
+    return res.status(201).set('Location', location).json({
+      status: 'ok',
+      fragment: fragment,
+    });
   } catch (error) {
     // Log and return an error if an exception occurs
     logger.error(`Error creating fragment: ${error.message}`);
